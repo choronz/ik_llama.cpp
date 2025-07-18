@@ -41,12 +41,13 @@ jobs:
         - name: Build with CMake
           run: |
             cmake -S . -B build -G Ninja \
-              -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_SERVER=ON \
+              -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_SERVER=ON -DGGML_CUDA=ON \
+              -DGGML_CUDA_FA_ALL_QUANTS=ON -DGGML_CUDA_F16=ON \
+              -DGGML_CUDA_DMMV_X=64 -DGGML_CUDA_MMV_Y=2 -DK_QUANTS_PER_ITERATION=2 \
+              -DGGML_RPC=ON -DCURL_LIBRARY="%CURL_PATH%/lib/libcurl.dll.a" -DCURL_INCLUDE_DIR="%CURL_PATH%/include" \
               -DCMAKE_CUDA_ARCHITECTURES=89-real \
-              -DGGML_CUDA_FA_ALL_QUANTS=ON \
               -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined \
-              -DGGML_NATIVE=OFF -DGGML_BACKEND_DL=ON \
-              -DGGML_CUDA=ON -DLLAMA_FATAL_WARNINGS=ON
+              -DGGML_NATIVE=OFF -DLLAMA_FATAL_WARNINGS=ON
             cmake --build build
             
         - name: Pack artifact
@@ -73,7 +74,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install ccache
-        uses: hendrikmuhs/ccache-action@v1.2.16
+        uses: hendrikmuhs/ccache-action@v1.2.18
         with:
           key: windows-cuda-${{ matrix.cuda }}
           variant: ccache
@@ -101,12 +102,10 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           cmake -S . -B build -G "Ninja Multi-Config" ^
-            -DLLAMA_BUILD_SERVER=ON ^
-            -DGGML_NATIVE=OFF ^
-            -DGGML_CUDA_FA_ALL_QUANTS=ON ^
-            -DGGML_CUDA=ON ^
-            -DGGML_RPC=ON ^
-            -DCURL_LIBRARY="%CURL_PATH%/lib/libcurl.dll.a" -DCURL_INCLUDE_DIR="%CURL_PATH%/include"
+            -DLLAMA_BUILD_SERVER=ON -DGGML_CUDA=ON -DGGML_NATIVE=OFF ^
+            -DGGML_CUDA_FA_ALL_QUANTS=ON -DGGML_CUDA_F16=ON ^
+            -DGGML_CUDA_DMMV_X=64 -DGGML_CUDA_MMV_Y=2 -DK_QUANTS_PER_ITERATION=2 ^
+            -DGGML_RPC=ON -DCURL_LIBRARY="%CURL_PATH%/lib/libcurl.dll.a" -DCURL_INCLUDE_DIR="%CURL_PATH%/include"
           set /A NINJA_JOBS=%NUMBER_OF_PROCESSORS%-1
           cmake --build build --config Release -j %NINJA_JOBS% -t ggml
           cmake --build build --config Release
@@ -120,5 +119,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          path: llama-bin-win-${{ matrix.cuda }}-x64-${{ matrix.instr }}.zip
+          path: llama-bin-win-${{ matrix.cuda }}-x64.zip
           name: llama-bin-win-${{ matrix.cuda }}-x64.zip

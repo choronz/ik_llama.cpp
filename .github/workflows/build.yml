@@ -48,7 +48,18 @@ jobs:
               -DGGML_NATIVE=OFF \
               -DGGML_CUDA=ON
             cmake --build build
-
+            
+        - name: Pack artifact
+          id: pack_artifact
+          run: |
+            zip -r llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip ./build/bin/*
+  
+        - name: Upload artifact
+          uses: actions/upload-artifact@v4
+          with:
+            path: llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip
+            name: llama-bin-ubuntu-x64.zip
+            
   windows-2022-cmake-cuda:
     runs-on: windows-2022
 
@@ -99,3 +110,14 @@ jobs:
           set /A NINJA_JOBS=%NUMBER_OF_PROCESSORS%-1
           cmake --build build --config Release -j %NINJA_JOBS% -t ggml
           cmake --build build --config Release
+
+      - name: Pack artifact
+        id: pack_artifact
+        run: |
+          7z a llama-bin-win-cuda-${{ matrix.cuda }}-x64-${{ matrix.instr }}.zip .\build\bin\Release\*
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: llama-bin-win-${{ matrix.cuda }}-x64-${{ matrix.instr }}.zip
+          name: llama-bin-win-${{ matrix.cuda }}-x64-${{ matrix.instr }}.zip

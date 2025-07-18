@@ -41,14 +41,12 @@ jobs:
         - name: Build with CMake
           run: |
             cmake -S . -B build -G Ninja \
-              -DCMAKE_BUILD_TYPE=Release \
-              -DLLAMA_BUILD_SERVER=ON \
+              -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_SERVER=ON \
               -DCMAKE_CUDA_ARCHITECTURES=89-real \
               -DGGML_CUDA_FA_ALL_QUANTS=ON \
               -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined \
-              -DLLAMA_FATAL_WARNINGS=ON \
-              -DGGML_NATIVE=OFF \
-              -DGGML_CUDA=ON
+              -DGGML_NATIVE=OFF -DGGML_BACKEND_DL=ON \
+              -DGGML_CUDA=ON -DLLAMA_FATAL_WARNINGS=ON \
             cmake --build build
             
         - name: Pack artifact
@@ -116,10 +114,11 @@ jobs:
       - name: Pack artifact
         id: pack_artifact
         run: |
-          7z a llama-bin-win-cuda-${{ matrix.cuda }}-x64-${{ matrix.instr }}.zip .\build\bin\Release\*
+          7z a llama-bin-win-cuda-${{ matrix.cuda }}-x64.zip .\build\bin\Release\*
+        # ${{ matrix.instr }}   
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           path: llama-bin-win-${{ matrix.cuda }}-x64-${{ matrix.instr }}.zip
-          name: llama-bin-win-${{ matrix.cuda }}-x64-${{ matrix.instr }}.zip
+          name: llama-bin-win-${{ matrix.cuda }}-x64.zip

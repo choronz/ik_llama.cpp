@@ -2,7 +2,7 @@
 name: Server
 
 on:
-  workflow_dispatch: # allows manual triggering
+  workflow_dispatch:
     inputs:
       sha:
         description: 'Commit SHA1 to build'
@@ -69,7 +69,7 @@ jobs:
         id: setup_python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Tests dependencies
         id: test_dependencies
@@ -79,7 +79,7 @@ jobs:
       # Setup nodejs (to be used for verifying bundled index.html)
       - uses: actions/setup-node@v4
         with:
-          node-version: '22.11.0'
+          node-version: '22.17.0'
 
       - name: WebUI - Install dependencies
         id: webui_lint
@@ -180,7 +180,7 @@ jobs:
 
 
   server-windows:
-    runs-on: windows-2019
+    runs-on: windows-2012
 
     steps:
       - name: Clone
@@ -206,7 +206,7 @@ jobs:
         id: setup_python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Tests dependencies
         id: test_dependencies

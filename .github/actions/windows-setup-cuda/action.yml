@@ -12,7 +12,7 @@ runs:
       if: ${{ inputs.cuda_version == '12.6' }}
       shell: pwsh
       run: |
-          mkdir -p "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6
+          mkdir -p "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6"
           choco install unzip -y
           curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/windows-x86_64/cuda_cudart-windows-x86_64-12.6.77-archive.zip"
           curl -O "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/windows-x86_64/cuda_nvcc-windows-x86_64-12.6.85-archive.zip"

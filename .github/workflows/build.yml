@@ -106,8 +106,8 @@ jobs:
             -DLLAMA_BUILD_SERVER=ON -DGGML_CUDA=ON ^
             -DGGML_CUDA_FA_ALL_QUANTS=ON -DGGML_CUDA_F16=ON ^
             -DCMAKE_CUDA_ARCHITECTURES=89-real ^
-            -DGGML_RPC=OFF -DCURL_LIBRARY="%CURL_PATH%/lib/libcurl.dll.a" -DCURL_INCLUDE_DIR="%CURL_PATH%/include" ^
-            -DGGML_NATIVE=OFF -DLLAMA_FATAL_WARNINGS=ON
+            -DGGML_NATIVE=OFF -DLLAMA_FATAL_WARNINGS=ON ^
+            -DGGML_RPC=OFF -DCURL_LIBRARY="%CURL_PATH%/lib/libcurl.dll.a" -DCURL_INCLUDE_DIR="%CURL_PATH%/include"
           set /A NINJA_JOBS=%NUMBER_OF_PROCESSORS%-1
           cmake --build build --config Release -j %NINJA_JOBS% -t ggml
           cmake --build build --config Release

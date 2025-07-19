@@ -43,7 +43,7 @@ jobs:
             cmake -S . -B build -G Ninja \
               -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_SERVER=ON -DGGML_CUDA=ON \
               -DGGML_CUDA_FA_ALL_QUANTS=ON -DGGML_CUDA_F16=ON \
-              -DGGML_RPC=OFF -DGGML_CURL=OFF \
+              -DGGML_BLAS=OFF -DGGML_RPC=OFF -DGGML_CURL=OFF \
               -DCMAKE_CUDA_ARCHITECTURES=89-real \
               -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined \
               -DGGML_NATIVE=OFF -DLLAMA_FATAL_WARNINGS=ON
@@ -105,13 +105,12 @@ jobs:
           cmake -S . -B build -G "Ninja Multi-Config" ^
             -DLLAMA_BUILD_SERVER=ON -DGGML_CUDA=ON ^
             -DGGML_CUDA_FA_ALL_QUANTS=ON -DGGML_CUDA_F16=ON ^
-            -DCMAKE_CUDA_ARCHITECTURES="86;89" ^
-            -DGGML_NATIVE=OFF -DGGML_RPC=OFF -DGGML_CURL=OFF -DLLAMA_FATAL_WARNINGS=ON
+            -DCMAKE_CUDA_ARCHITECTURES=89 ^
+            -DGGML_NATIVE=OFF -DGGML_RPC=OFF -DGGML_CURL=OFF -DLLAMA_FATAL_WARNINGS=ON 
           set /A NINJA_JOBS=%NUMBER_OF_PROCESSORS%-1
           cmake --build build --config Release -j %NINJA_JOBS% -t ggml
           cmake --build build --config Release
-      # -DCURL_LIBRARY="%CURL_PATH%/lib/libcurl.dll.a" -DCURL_INCLUDE_DIR="%CURL_PATH%/include"
-      
+          
       - name: Pack artifact
         id: pack_artifact
         run: |

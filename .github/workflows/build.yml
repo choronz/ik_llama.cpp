@@ -30,7 +30,7 @@ jobs:
             DEBIAN_FRONTEND: noninteractive
           run: |
               apt update
-              apt install -y cmake build-essential ninja-build libgomp1 git libcurl4-openssl-dev
+              apt install -y cmake build-essential ninja-build libgomp1 git libcurl4-openssl-dev zip
 
         - name: ccache
           uses: hendrikmuhs/ccache-action@v1.2.18
@@ -114,11 +114,11 @@ jobs:
       - name: Pack artifact
         id: pack_artifact
         run: |
-          7z a llama-bin-win-${{ matrix.cuda }}-x64.zip .\build\bin\Release\*
+          7z a llama-bin-win-${{ matrix.cuda }}.zip .\build\bin\Release\*
         # ${{ matrix.instr }}   
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          path: llama-bin-win-${{ matrix.cuda }}-x64.zip
-          name: llama-bin-win-${{ matrix.cuda }}-x64.zip
+          path: llama-bin-win-${{ matrix.cuda }}.zip
+          name: llama-bin-win-${{ matrix.cuda }}.zip
